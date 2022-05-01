@@ -17,7 +17,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.goaway.game.GoAway;
 import com.goaway.game.Scenes.Hud;
 import com.goaway.game.Sprites.Player;
+import com.goaway.game.Sprites.Rat;
 import com.goaway.game.Tools.B2WorldCreator;
+import com.goaway.game.Tools.WorldContactListener;
 
 
 /**
@@ -44,9 +46,14 @@ public class PlayScreen implements Screen{
     //Player
     private Player player;
     private TextureAtlas atlas;
+    
+    //Enemy
+    private TextureAtlas atlasEnemy;
+    private Rat rat;
 
     public PlayScreen(GoAway game){
     	atlas = new TextureAtlas("player.txt");
+    	atlasEnemy = new TextureAtlas("rat.txt");
     	
         this.game = game;
         //create cam used to follow mario through cam world
@@ -69,17 +76,23 @@ public class PlayScreen implements Screen{
         world = new World(new Vector2(0 , -10 ), true);
         b2dr = new Box2DDebugRenderer();
         
-        new B2WorldCreator(world, map);
+        new B2WorldCreator(this);
         
         //Player
-        player = new Player(world, this);
+        player = new Player(this);
         
+        world.setContactListener(new WorldContactListener());
         
-
+        rat = new Rat(this, 5.64f, .64f);
+        
     }
     
     public TextureAtlas getAtlas() {
     	return atlas;
+    }
+    
+    public TextureAtlas getAtlasEnemy() {
+    	return atlasEnemy;
     }
     
     @Override
@@ -110,9 +123,12 @@ public class PlayScreen implements Screen{
         world.step(1/60f, 6, 2);
         
         player.update(dt);
+        rat.update(dt);
+        hud.update(dt);
         
         gamecam.position.x = player.b2body.getPosition().x;
-        
+        gamecam.position.y = player.b2body.getPosition().y;
+
         //update our gamecam with correct coordinates after changes
         gamecam.update();
         //tell our renderer to draw only what our camera can see in our game world.
@@ -137,6 +153,7 @@ public class PlayScreen implements Screen{
         game.batch.setProjectionMatrix(gamecam.combined);
         game.batch.begin();
         player.draw(game.batch);
+        rat.draw(game.batch);
         game.batch.end();
         
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
@@ -149,7 +166,14 @@ public class PlayScreen implements Screen{
         gamePort.update(width,height);
 
     }
-
+    public TiledMap getMap() {
+    	return map;
+    }
+    public World getWorld() {
+    	return world;
+    }
+    
+    
     @Override
     public void pause() {
 

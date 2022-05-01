@@ -10,18 +10,22 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.goaway.game.GoAway;
+import com.goaway.game.Screens.PlayScreen;
 import com.goaway.game.Sprites.Brick;
 import com.goaway.game.Sprites.Coin;
 
 public class B2WorldCreator {
-	public B2WorldCreator(World world, TiledMap map) {
+	public B2WorldCreator(PlayScreen screen) {
+		World world = screen.getWorld();
+		TiledMap map = screen.getMap();
+		
 		BodyDef bdef = new BodyDef();
         PolygonShape shape = new PolygonShape();
         FixtureDef fdef = new FixtureDef();
         Body body;
 
         //create ground bodies/fixtures
-        for(MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)){
+        for(MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             bdef.type = BodyDef.BodyType.StaticBody;
@@ -35,10 +39,10 @@ public class B2WorldCreator {
         }
 
         
-        //create brick bodies/fixtures
-        for(MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)){
+//        //create brick bodies/fixtures
+        for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new Brick(world, map, rect);
+            new Brick(screen, rect);
   
         }
 
@@ -46,7 +50,7 @@ public class B2WorldCreator {
         for(MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            new Coin(world, map, rect);
+            new Coin(screen, rect);
             
         }
 

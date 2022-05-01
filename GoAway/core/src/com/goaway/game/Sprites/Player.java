@@ -16,7 +16,7 @@ public class Player extends Sprite{
 	public enum State {
 		FALLING, JUMPING, STANDING, RUNNING
 	};
-	public State currentState;
+	public static State currentState;
 	public State previousState;
 	public World world;
 	public Body b2body;
@@ -26,9 +26,9 @@ public class Player extends Sprite{
 	private float stateTimer;
 	private boolean runningRight;
 	
-	public Player(World world, PlayScreen screen) {
+	public Player(PlayScreen screen) {
 		super(screen.getAtlas().findRegion("otter_idle"));
-		this.world = world;
+		this.world = screen.getWorld();
 		currentState = State.STANDING;
 		previousState = State.STANDING;
 		stateTimer = 0;
@@ -108,17 +108,26 @@ public class Player extends Sprite{
 	
 	public void definePlayer() {
 		BodyDef bdef = new BodyDef();
-		bdef.position.set(32 / GoAway.PPM , 32  / GoAway.PPM);
+		bdef.position.set(300 / GoAway.PPM , 300  / GoAway.PPM);
 		bdef.type = BodyDef.BodyType.DynamicBody;
 		b2body = world.createBody(bdef);
 		
 		FixtureDef fdef = new FixtureDef();
 		CircleShape shape = new CircleShape();
-		shape.setRadius(18  / GoAway.PPM);
+		shape.setRadius(16 / GoAway.PPM);
 		
+		fdef.filter.categoryBits = GoAway.PLAYER_BIT;
+		fdef.filter.maskBits = 
+				GoAway.GROUND_BIT | 
+				GoAway.COIN_BIT | 
+				GoAway.BRICK_BIT |
+				GoAway.ENEMY_BIT |
+				GoAway.OBJECT_BIT |
+				GoAway.ENEMY_HEAD_BIT;
 		
 		fdef.shape = shape;
-		b2body.createFixture(fdef);
+		b2body.createFixture(fdef).setUserData("body");
+		
 	}
 	
 }
