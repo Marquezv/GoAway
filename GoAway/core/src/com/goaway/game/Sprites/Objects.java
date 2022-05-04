@@ -11,7 +11,7 @@ public class Objects extends InteractiveTileObject{
 		super(screen, bounds);
 		fixture.setUserData(this);
 		setCategoryFilter(GoAway.OBJECT_BIT);
-		Gdx.app.log("Brick", "Collision");
+		Gdx.app.log("Objects", "Collision");
 		
 	}
 

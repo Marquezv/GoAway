@@ -117,8 +117,8 @@ public class Player extends Sprite{
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
 		Vector2[] verticeShape = new Vector2[4];
-		verticeShape[0] = new Vector2(8, 8).scl(1 / GoAway.PPM);
-		verticeShape[1] = new Vector2(-8, 8).scl(1 / GoAway.PPM);
+		verticeShape[0] = new Vector2(8, 2).scl(1 / GoAway.PPM);
+		verticeShape[1] = new Vector2(-8, 2).scl(1 / GoAway.PPM);
 		verticeShape[2] = new Vector2(8, -18).scl(1 / GoAway.PPM);
 		verticeShape[3] = new Vector2(-8, -18).scl(1 / GoAway.PPM);
 		shape.set(verticeShape);

@@ -41,12 +41,15 @@ public class WorldContactListener implements ContactListener {
 				}
 				else {
 					((Enemy)fixB.getUserData()).hitOnShape();
+
 				}
 				break;
 				
 			case GoAway.ENEMY_BIT | GoAway.OBJECT_BIT:
 				if(fixA.getFilterData().categoryBits == GoAway.ENEMY_BIT) {
 					((Enemy)fixA.getUserData()).reverseVelocity(true, false);
+					
+					
 				}
 				else {
 					((Enemy)fixB.getUserData()).reverseVelocity(true, false);

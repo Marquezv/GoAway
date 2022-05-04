@@ -45,7 +45,7 @@ public class B2WorldCreator {
 
         
 //        //create brick bodies/fixtures
-        for(MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)){
+        for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             new Brick(screen, rect);
   
@@ -59,8 +59,8 @@ public class B2WorldCreator {
             
         }
         
-        //create coin bodies/fixtures
-        for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){
+        //create object bodies/fixtures
+        for(MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             new Objects(screen, rect);
@@ -69,7 +69,7 @@ public class B2WorldCreator {
         
         // create rats
         rats = new Array<Rat>();
-        for(MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)){
+        for(MapObject object : map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             rats.add(new Rat(screen, rect.getX() / GoAway.PPM, rect.getY() / GoAway.PPM));
