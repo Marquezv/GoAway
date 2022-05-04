@@ -3,10 +3,12 @@ package com.goaway.game.Sprites;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.goaway.game.GoAway;
@@ -113,8 +115,13 @@ public class Player extends Sprite{
 		b2body = world.createBody(bdef);
 		
 		FixtureDef fdef = new FixtureDef();
-		CircleShape shape = new CircleShape();
-		shape.setRadius(16 / GoAway.PPM);
+		PolygonShape shape = new PolygonShape();
+		Vector2[] verticeShape = new Vector2[4];
+		verticeShape[0] = new Vector2(8, 8).scl(1 / GoAway.PPM);
+		verticeShape[1] = new Vector2(-8, 8).scl(1 / GoAway.PPM);
+		verticeShape[2] = new Vector2(8, -18).scl(1 / GoAway.PPM);
+		verticeShape[3] = new Vector2(-8, -18).scl(1 / GoAway.PPM);
+		shape.set(verticeShape);
 		
 		fdef.filter.categoryBits = GoAway.PLAYER_BIT;
 		fdef.filter.maskBits = 
@@ -122,7 +129,6 @@ public class Player extends Sprite{
 				GoAway.COIN_BIT | 
 				GoAway.BRICK_BIT |
 				GoAway.ENEMY_BIT |
-				GoAway.OBJECT_BIT |
 				GoAway.ENEMY_HEAD_BIT;
 		
 		fdef.shape = shape;

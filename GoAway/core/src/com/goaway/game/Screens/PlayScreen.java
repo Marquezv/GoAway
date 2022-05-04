@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.goaway.game.GoAway;
 import com.goaway.game.Scenes.Hud;
+import com.goaway.game.Sprites.Enemy;
 import com.goaway.game.Sprites.Player;
 import com.goaway.game.Sprites.Rat;
 import com.goaway.game.Tools.B2WorldCreator;
@@ -28,6 +29,7 @@ import com.goaway.game.Tools.WorldContactListener;
 public class PlayScreen implements Screen{
     //Reference to our Game, used to set Screens
     private GoAway game;
+    public static boolean alreadyDestroyed = false;
 
     //basic playscreen variables
     private OrthographicCamera gamecam;
@@ -42,14 +44,14 @@ public class PlayScreen implements Screen{
     //Box2d variables
     private World world;
     private Box2DDebugRenderer b2dr;
+    private B2WorldCreator creator;
     
     //Player
     private Player player;
     private TextureAtlas atlas;
     
     //Enemy
-    private TextureAtlas atlasEnemy;
-    private Rat rat;
+    private TextureAtlas atlasEnemy;	
 
     public PlayScreen(GoAway game){
     	atlas = new TextureAtlas("player.txt");
@@ -76,14 +78,13 @@ public class PlayScreen implements Screen{
         world = new World(new Vector2(0 , -10 ), true);
         b2dr = new Box2DDebugRenderer();
         
-        new B2WorldCreator(this);
+        creator = new B2WorldCreator(this);
         
         //Player
         player = new Player(this);
         
         world.setContactListener(new WorldContactListener());
         
-        rat = new Rat(this, 5.64f, .64f);
         
     }
     
@@ -123,7 +124,8 @@ public class PlayScreen implements Screen{
         world.step(1/60f, 6, 2);
         
         player.update(dt);
-        rat.update(dt);
+        for(Enemy enemy : creator.getRats())
+        	enemy.update(dt);
         hud.update(dt);
         
         gamecam.position.x = player.b2body.getPosition().x;
@@ -153,7 +155,8 @@ public class PlayScreen implements Screen{
         game.batch.setProjectionMatrix(gamecam.combined);
         game.batch.begin();
         player.draw(game.batch);
-        rat.draw(game.batch);
+        for(Enemy enemy : creator.getRats())
+        	enemy.draw(game.batch);
         game.batch.end();
         
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);

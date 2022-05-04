@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
@@ -38,7 +39,6 @@ public class Rat extends Enemy{
 			world.destroyBody(b2body);
 			destroyed = true;
 			setRegion(new TextureRegion(screen.getAtlasEnemy().findRegion("Hurt"), 26, 0, 32, 32));
-			System.out.println("true");
 			stateTime = 0;
 		}
 		else if(!destroyed){
@@ -52,17 +52,17 @@ public class Rat extends Enemy{
 	@Override
 	protected void defineEnemy() {
 		BodyDef bdef = new BodyDef();
-		bdef.position.set(200 / GoAway.PPM , 200  / GoAway.PPM);
+		bdef.position.set(getX() , getY());
 		bdef.type = BodyDef.BodyType.DynamicBody;
 		b2body = world.createBody(bdef);
 		
 		FixtureDef fdef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
 		Vector2[] verticeShape = new Vector2[4];
-		verticeShape[0] = new Vector2(8, -6).scl(1 / GoAway.PPM);
-		verticeShape[1] = new Vector2(-8, -6).scl(1 / GoAway.PPM);
-		verticeShape[2] = new Vector2(15, -15).scl(1 / GoAway.PPM);
-		verticeShape[3] = new Vector2(-15, -15).scl(1 / GoAway.PPM);
+		verticeShape[0] = new Vector2(10, -6).scl(1 / GoAway.PPM);
+		verticeShape[1] = new Vector2(-10, -6).scl(1 / GoAway.PPM);
+		verticeShape[2] = new Vector2(10, -15).scl(1 / GoAway.PPM);
+		verticeShape[3] = new Vector2(-10, -15).scl(1 / GoAway.PPM);
 		shape.set(verticeShape);
 		
 		
@@ -76,9 +76,15 @@ public class Rat extends Enemy{
 		
 		fdef.shape = shape;
 		fdef.restitution = 0.5f;
-		fdef.filter.categoryBits = GoAway.ENEMY_HEAD_BIT;
+		
 		b2body.createFixture(fdef).setUserData(this);
 		
+		 EdgeShape head = new EdgeShape();
+	     head.set(new Vector2(-8 / GoAway.PPM, -5/ GoAway.PPM), new Vector2(8 / GoAway.PPM, -5/ GoAway.PPM));
+	     fdef.filter.categoryBits = GoAway.ENEMY_HEAD_BIT;
+	     fdef.shape = head;
+	     fdef.isSensor = true;
+	     b2body.createFixture(fdef).setUserData(this);
 	}
 	
 	public void draw(Batch batch) {

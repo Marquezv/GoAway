@@ -9,12 +9,17 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.goaway.game.GoAway;
 import com.goaway.game.Screens.PlayScreen;
 import com.goaway.game.Sprites.Brick;
 import com.goaway.game.Sprites.Coin;
+import com.goaway.game.Sprites.Objects;
+import com.goaway.game.Sprites.Rat;
 
 public class B2WorldCreator {
+	private Array<Rat> rats;
+
 	public B2WorldCreator(PlayScreen screen) {
 		World world = screen.getWorld();
 		TiledMap map = screen.getMap();
@@ -40,7 +45,7 @@ public class B2WorldCreator {
 
         
 //        //create brick bodies/fixtures
-        for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){
+        for(MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             new Brick(screen, rect);
   
@@ -53,6 +58,31 @@ public class B2WorldCreator {
             new Coin(screen, rect);
             
         }
+        
+        //create coin bodies/fixtures
+        for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+
+            new Objects(screen, rect);
+            
+        }
+        
+        // create rats
+        rats = new Array<Rat>();
+        for(MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)){
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+
+            rats.add(new Rat(screen, rect.getX() / GoAway.PPM, rect.getY() / GoAway.PPM));
+            
+        }
+        
 
 	}
+	 public Array<Rat> getRats() {
+ 		return rats;
+ 	}
+
+ 	public void setRats(Array<Rat> rats) {
+ 		this.rats = rats;
+ 	}
 }

@@ -21,7 +21,6 @@ public class WorldContactListener implements ContactListener {
 		
 		int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
 		
-		Gdx.app.log("Jump", "Action");
 		if("body".equals(fixA.getUserData()) || "body".equals(fixB.getUserData())) {
 			Fixture head = fixA.getUserData() == "body" ? fixA : fixB;
 			Fixture object = head == fixA ? fixB : fixA;
@@ -34,23 +33,28 @@ public class WorldContactListener implements ContactListener {
 			
 		}
 		switch (cDef) {
-		case GoAway.ENEMY_HEAD_BIT | GoAway.PLAYER_BIT:
-			if(fixA.getFilterData().categoryBits == GoAway.ENEMY_HEAD_BIT) {
-				((Enemy)fixA.getUserData()).hitOnShape();
+			case GoAway.ENEMY_HEAD_BIT | GoAway.PLAYER_BIT:
+
+				if(fixA.getFilterData().categoryBits == GoAway.ENEMY_HEAD_BIT) {
+					((Enemy)fixA.getUserData()).hitOnShape();
+
+				}
+				else {
+					((Enemy)fixB.getUserData()).hitOnShape();
+				}
+				break;
+				
+			case GoAway.ENEMY_BIT | GoAway.OBJECT_BIT:
+				if(fixA.getFilterData().categoryBits == GoAway.ENEMY_BIT) {
+					((Enemy)fixA.getUserData()).reverseVelocity(true, false);
+				}
+				else {
+					((Enemy)fixB.getUserData()).reverseVelocity(true, false);
+				}
+				break;
+			case GoAway.PLAYER_BIT | GoAway.ENEMY_BIT:
+				Gdx.app.log("Mario", "Died");
 			}
-			else {
-				((Enemy)fixB.getUserData()).hitOnShape();
-			}
-			break;
-		case GoAway.ENEMY_BIT | GoAway.PLAYER_BIT:
-			if(fixA.getFilterData().categoryBits == GoAway.ENEMY_BIT) {
-				((Enemy)fixA.getUserData()).reverseVelocity(true, false);
-			}
-			else {
-				((Enemy)fixB.getUserData()).reverseVelocity(true, false);
-			}
-			break;
-		}
 		
 	}
 
