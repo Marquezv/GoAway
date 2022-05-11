@@ -13,7 +13,6 @@ import com.goaway.game.Sprites.Player;
 import com.goaway.game.Sprites.Player.State;
 
 public class WorldContactListener implements ContactListener {
-
 	@Override
 	public void beginContact(Contact contact) {
 		Fixture fixA = contact.getFixtureA();
@@ -48,15 +47,15 @@ public class WorldContactListener implements ContactListener {
 			case GoAway.ENEMY_BIT | GoAway.OBJECT_BIT:
 				if(fixA.getFilterData().categoryBits == GoAway.ENEMY_BIT) {
 					((Enemy)fixA.getUserData()).reverseVelocity(true, false);
-					
-					
+
 				}
 				else {
 					((Enemy)fixB.getUserData()).reverseVelocity(true, false);
 				}
 				break;
 			case GoAway.PLAYER_BIT | GoAway.ENEMY_BIT:
-				Gdx.app.log("Mario", "Died");
+				Player.currentState = State.DEAD;
+				
 			}
 		
 	}

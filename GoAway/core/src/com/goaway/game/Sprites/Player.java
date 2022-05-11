@@ -6,7 +6,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -16,17 +17,20 @@ import com.goaway.game.Screens.PlayScreen;
 
 public class Player extends Sprite{
 	public enum State {
-		FALLING, JUMPING, STANDING, RUNNING
+		FALLING, JUMPING, STANDING, RUNNING, DEAD
 	};
 	public static State currentState;
 	public State previousState;
 	public World world;
 	public Body b2body;
 	private TextureRegion playerStand;
+	private TextureRegion playerDead;
 	private Animation<TextureRegion> playerRun;
 	private Animation<TextureRegion> playerJump;
 	private float stateTimer;
 	private boolean runningRight;
+	public boolean playerIsDead;
+	
 	
 	public Player(PlayScreen screen) {
 		super(screen.getAtlas().findRegion("otter_idle"));
@@ -49,7 +53,8 @@ public class Player extends Sprite{
 		playerJump =new Animation<TextureRegion>(0.1f, frames);
 		
 		playerStand = new TextureRegion(getTexture(), 0, 0, 200, 200);
-
+		
+		playerDead = new TextureRegion(getTexture(), 0, 0, 200, 200);
 		
 		definePlayer();
 		setBounds(0, 0, 60 / GoAway.PPM, 60 / GoAway.PPM);
@@ -67,6 +72,10 @@ public class Player extends Sprite{
 		
 		TextureRegion region;
 		switch (currentState) {
+		case DEAD:
+			hit();
+			region = playerDead;
+			break;
 		case JUMPING:
 			region = playerJump.getKeyFrame(stateTimer, true);
 			break;
@@ -75,7 +84,7 @@ public class Player extends Sprite{
 			break;
 		case FALLING:
 		case STANDING:
-			
+		
 		default:
 			region = playerStand;
 			break;
@@ -94,7 +103,10 @@ public class Player extends Sprite{
 	}
 	
 	public State getState() {
-		if(b2body.getLinearVelocity().y > 0 || (b2body.getLinearVelocity().y < 0 && previousState == State.JUMPING)) {
+		if(playerIsDead = false) {
+			return State.DEAD;
+		}
+		else if(b2body.getLinearVelocity().y > 0 || (b2body.getLinearVelocity().y < 0 && previousState == State.JUMPING)) {
 			return State.JUMPING;
 		}
 		else if(b2body.getLinearVelocity().y < 0) {
@@ -134,6 +146,15 @@ public class Player extends Sprite{
 		fdef.shape = shape;
 		b2body.createFixture(fdef).setUserData("body");
 		
+	}
+	
+	public void hit() {
+		playerIsDead = true;
+         Filter filter = new Filter();
+         filter.maskBits = GoAway.NOTHING_BIT;
+         for(Fixture fixture : b2body.getFixtureList())
+             fixture.setFilterData(filter);
+         b2body.applyLinearImpulse(new Vector2(0, 4f), b2body.getWorldCenter(), true);
 	}
 	
 }

@@ -18,6 +18,7 @@ import com.goaway.game.GoAway;
 import com.goaway.game.Scenes.Hud;
 import com.goaway.game.Sprites.Enemy;
 import com.goaway.game.Sprites.Player;
+import com.goaway.game.Sprites.Player.State;
 import com.goaway.game.Sprites.Rat;
 import com.goaway.game.Tools.B2WorldCreator;
 import com.goaway.game.Tools.WorldContactListener;
@@ -87,7 +88,7 @@ public class PlayScreen implements Screen{
         
         
     }
-    
+ 	
     public TextureAtlas getAtlas() {
     	return atlas;
     }

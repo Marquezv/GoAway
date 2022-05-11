@@ -112,4 +112,6 @@ public class Rat extends Enemy{
 	public void hitOnShape() {
 		setToDestroy = true;
 	}
+	
+	
 }

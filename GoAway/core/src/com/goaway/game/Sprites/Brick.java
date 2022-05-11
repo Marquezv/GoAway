@@ -11,13 +11,11 @@ public class Brick extends InteractiveTileObject{
 		super(screen, bounds);
 		fixture.setUserData(this);
 		setCategoryFilter(GoAway.BRICK_BIT);
-		Gdx.app.log("Brick", "Collision");
 		
 	}
 
 	@Override
 	public void onHit() {
-		Gdx.app.log("Brick", "Collision");
 		setCategoryFilter(GoAway.DESTROYED_BIT);
 		getCell().setTile(tile);
 		Hud.addScore(100);

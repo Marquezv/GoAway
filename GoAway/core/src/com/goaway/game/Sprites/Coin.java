@@ -13,11 +13,11 @@ public class Coin extends InteractiveTileObject{
 		super(screen, bounds);
 		fixture.setUserData(this);
 		setCategoryFilter(GoAway.COIN_BIT);
+		
 	}
 
 	@Override
 	public void onHit() {
-		Gdx.app.log("Brick", "Collision");
 		setCategoryFilter(GoAway.DESTROYED_BIT);
 		getCell().setTile(tile);
 		Hud.addScore(300);
